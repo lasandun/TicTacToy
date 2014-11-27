@@ -158,6 +158,9 @@ public class TicTacToy extends TicTacServer{
         board[r][c] = player;
         gui.setBoard(board);
         showBoard();
+        if(isGameOver() != 0) {
+            finishGame();
+        }
     }
     
     int isGameOver() {
@@ -175,6 +178,15 @@ public class TicTacToy extends TicTacServer{
         if(board[2][0] == p && board[0][2] == p) return p;
         
         return 0;
+    }
+    
+    public void finishGame() {
+        if(isGameOver() == 1) {
+            gui.setMessageText("you won!");
+        }
+        else if(isGameOver() == -1) {
+            gui.setMessageText("you lost!");
+        }
     }
     
     
@@ -235,7 +247,8 @@ public class TicTacToy extends TicTacServer{
         }
         else if(args[0].equals("client")) {
             x.connectGame("localhost");
-        } else {
+        }
+        else {
             System.out.println("undefined operation");
             System.exit(0);
         }

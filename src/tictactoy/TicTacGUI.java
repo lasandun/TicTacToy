@@ -22,6 +22,10 @@ public class TicTacGUI extends javax.swing.JFrame {
     JTextField[][] boxes = new JTextField[3][3];
     private TicTacToy ticTacToy;
     
+    public void setMessageText(String text) {
+        textMessage.setText(text);
+    }
+    
     public void setBoard(int board[][]) {
         for(int r = 0; r < 3; ++r) {
             for(int c = 0; c < 3; ++c) {
@@ -127,11 +131,12 @@ public class TicTacGUI extends javax.swing.JFrame {
         box20 = new javax.swing.JTextField();
         box21 = new javax.swing.JTextField();
         box22 = new javax.swing.JTextField();
+        textMessage = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         box00.setEditable(false);
-        box00.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
+        box00.setFont(new java.awt.Font("Dialog", 0, 48));
         box00.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         box00.setToolTipText("");
         box00.addActionListener(new java.awt.event.ActionListener() {
@@ -141,7 +146,7 @@ public class TicTacGUI extends javax.swing.JFrame {
         });
 
         box01.setEditable(false);
-        box01.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
+        box01.setFont(new java.awt.Font("Dialog", 0, 48));
         box01.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         box01.setToolTipText("");
         box01.addActionListener(new java.awt.event.ActionListener() {
@@ -151,7 +156,7 @@ public class TicTacGUI extends javax.swing.JFrame {
         });
 
         box02.setEditable(false);
-        box02.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
+        box02.setFont(new java.awt.Font("Dialog", 0, 48));
         box02.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         box02.setToolTipText("");
         box02.addActionListener(new java.awt.event.ActionListener() {
@@ -161,7 +166,7 @@ public class TicTacGUI extends javax.swing.JFrame {
         });
 
         box10.setEditable(false);
-        box10.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
+        box10.setFont(new java.awt.Font("Dialog", 0, 48));
         box10.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         box10.setToolTipText("");
         box10.addActionListener(new java.awt.event.ActionListener() {
@@ -171,7 +176,7 @@ public class TicTacGUI extends javax.swing.JFrame {
         });
 
         box11.setEditable(false);
-        box11.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
+        box11.setFont(new java.awt.Font("Dialog", 0, 48));
         box11.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         box11.setToolTipText("");
         box11.addActionListener(new java.awt.event.ActionListener() {
@@ -181,7 +186,7 @@ public class TicTacGUI extends javax.swing.JFrame {
         });
 
         box12.setEditable(false);
-        box12.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
+        box12.setFont(new java.awt.Font("Dialog", 0, 48));
         box12.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         box12.setToolTipText("");
         box12.addActionListener(new java.awt.event.ActionListener() {
@@ -191,7 +196,7 @@ public class TicTacGUI extends javax.swing.JFrame {
         });
 
         box20.setEditable(false);
-        box20.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
+        box20.setFont(new java.awt.Font("Dialog", 0, 48));
         box20.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         box20.setToolTipText("");
         box20.addActionListener(new java.awt.event.ActionListener() {
@@ -201,7 +206,7 @@ public class TicTacGUI extends javax.swing.JFrame {
         });
 
         box21.setEditable(false);
-        box21.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
+        box21.setFont(new java.awt.Font("Dialog", 0, 48));
         box21.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         box21.setToolTipText("");
         box21.addActionListener(new java.awt.event.ActionListener() {
@@ -211,7 +216,7 @@ public class TicTacGUI extends javax.swing.JFrame {
         });
 
         box22.setEditable(false);
-        box22.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
+        box22.setFont(new java.awt.Font("Dialog", 0, 48));
         box22.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         box22.setToolTipText("");
         box22.addActionListener(new java.awt.event.ActionListener() {
@@ -220,32 +225,39 @@ public class TicTacGUI extends javax.swing.JFrame {
             }
         });
 
+        textMessage.setEditable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(65, 65, 65)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(box20, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(box21, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(box22, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(box10, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(box11, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(box12, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(box00, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(box01, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(box02, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(65, 65, 65)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(box20, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(box21, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(box22, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(box10, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(box11, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(box12, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(box00, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(box01, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(box02, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(94, 94, 94)
+                        .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(122, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -266,7 +278,9 @@ public class TicTacGUI extends javax.swing.JFrame {
                     .addComponent(box20, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(box21, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(box22, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addGap(71, 71, 71)
+                .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         pack();
@@ -371,5 +385,6 @@ private void box22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     private javax.swing.JTextField box20;
     private javax.swing.JTextField box21;
     private javax.swing.JTextField box22;
+    private javax.swing.JTextField textMessage;
     // End of variables declaration//GEN-END:variables
 }
