@@ -11,12 +11,27 @@ public class TicTacToy {
     public final int free;
     public final int opponent;
     int board[][];
+    final TicTacGUI gui;
     
     public TicTacToy() {
         player = 1;
         free = 0;
         opponent = -1;
         board = new int[3][3];
+        
+        // create GUI
+        gui = new TicTacGUI();
+        gui.setTicTacToy(this);
+        Thread guiThread = new Thread() {
+            public void run() {
+                gui.setVisible(true);
+            }
+        };
+        guiThread.start();
+    }
+    
+    public void onUpdateFromGUI(int r, int c) {
+        
     }
     
     private boolean isRowFree(int row, int player, int board[][]) {
@@ -119,6 +134,8 @@ public class TicTacToy {
             System.exit(1);
         }
         board[r][c] = player;
+        gui.setBoard(board);
+        showBoard();
     }
     
     int isGameOver() {
@@ -139,7 +156,7 @@ public class TicTacToy {
     }
     
     public static void main(String[] args) {
-        int player = 1;
+        /*int player = 1;
         int opponent = -1;
         int free = 0;
         TicTacToy x = new TicTacToy();
@@ -151,7 +168,11 @@ public class TicTacToy {
         //x.tic(1, 2, opponent);
         x.showBoard();
         x.bestMove(opponent, x.board).show();
-        System.out.println(x.isGameOver());
+        System.out.println(x.isGameOver());*/
+        
+        TicTacToy x = new TicTacToy();
+        
+        
     }
     
 }

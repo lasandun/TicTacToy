@@ -10,7 +10,6 @@
  */
 package tictactoy;
 
-import java.awt.Button;
 import java.awt.event.MouseAdapter;
 import javax.swing.JTextField;
 
@@ -21,21 +20,29 @@ import javax.swing.JTextField;
 public class TicTacGUI extends javax.swing.JFrame {
 
     JTextField[][] boxes = new JTextField[3][3];
-    private boolean player1;
-
-    public void buttonAction(int r, int c) {
-        System.out.println("button clicked : " + r + " " + c);
-        // check for the validity
-        if(boxes[r][c].getText().equals("")) {
-            if(player1) {
-                boxes[r][c].setText("X");
-            } else {
-                boxes[r][c].setText("O");
+    private TicTacToy ticTacToy;
+    
+    public void setBoard(int board[][]) {
+        for(int r = 0; r < 3; ++r) {
+            for(int c = 0; c < 3; ++c) {
+                if(board[r][c] == 1) {
+                    boxes[r][c].setText("X");
+                } else if(board[r][c] == -1) {
+                    boxes[r][c].setText("O");
+                } else {
+                    boxes[r][c].setText("");
+                }
             }
-            player1 = !player1;
-        } else {
-            System.out.println(boxes[r][c].getText());
         }
+    }
+    
+    public void setTicTacToy(TicTacToy ticTacToy) {
+        this.ticTacToy = ticTacToy;
+    }
+    
+    public void buttonAction(int r, int c) {
+        if(ticTacToy == null) return;
+        ticTacToy.onUpdateFromGUI(r, c);
     }
 
     private void setButtonActions() {
@@ -88,7 +95,7 @@ public class TicTacGUI extends javax.swing.JFrame {
 
     /** Creates new form TicTacGUI */
     public TicTacGUI() {
-        player1 = true;
+        initGUIConfigs();
         initComponents();
         boxes[0][0] = box00;
         boxes[0][1] = box01;
@@ -301,6 +308,24 @@ private void box22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 // TODO add your handling code here:
 }//GEN-LAST:event_box22ActionPerformed
 
+    private void initGUIConfigs() {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
     /**
      * @param args the command line arguments
      */
