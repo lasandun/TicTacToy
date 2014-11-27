@@ -60,15 +60,4 @@ public abstract class TicTacToeServer {
         }
     }
     
-    /*public static void main(String[] args) {
-        TicTacToeServer x = new TicTacToeServer(1) {
-
-            @Override
-            public void onUpdate(String message) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        };
-        x.startServer();
-    }*/
-    
 }
