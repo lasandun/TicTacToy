@@ -20,6 +20,7 @@ public class TicTacToy extends TicTacServer{
     private boolean clientConnected;
     private String clientURL;
     private boolean myTurn;
+    private boolean gameGoingOn;
     
     TicTacClient client;
     
@@ -36,6 +37,7 @@ public class TicTacToy extends TicTacServer{
         // gameplay
         clientConnected = false;
         myTurn = false;
+        gameGoingOn = false;
         
         // create GUI
         gui = new TicTacGUI();
@@ -49,7 +51,7 @@ public class TicTacToy extends TicTacServer{
     }
     
     public void onUpdateFromGUI(int r, int c) {
-        if(myTurn) {
+        if(gameGoingOn && myTurn) {
             tic(r, c, player);
             client.sendMessage("tic " + r + " " + c);
             myTurn = false;
@@ -187,6 +189,9 @@ public class TicTacToy extends TicTacServer{
         else if(isGameOver() == -1) {
             gui.setMessageText("you lost!");
         }
+        myTurn = false;
+        gameGoingOn = false;
+        downServer();
     }
     
     
@@ -212,10 +217,12 @@ public class TicTacToy extends TicTacServer{
         startServer();
         client = new TicTacClient(serverURL, gameHostServerPort);
         client.sendMessage("connecting");
+        gameGoingOn = true;
     }
     
     public void hostGame() {
         myTurn = true;
+        gameGoingOn = true;
         setServerPort(gameHostServerPort);
         startServer();
         while(!clientConnected) {

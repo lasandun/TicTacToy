@@ -16,6 +16,11 @@ public abstract class TicTacServer {
     
     private ServerSocket serverSocket;
     private int port;
+    private boolean isServerUp;
+    
+    public TicTacServer() {
+        isServerUp = false;
+    }
 
     public void setServerPort(int port) {
         this.port = port;
@@ -24,6 +29,7 @@ public abstract class TicTacServer {
     public abstract void onUpdate(String message);
     
     public void startServer() {
+        isServerUp = true;
         Thread t = new Thread() {
             @Override
             public void run() {
@@ -33,10 +39,14 @@ public abstract class TicTacServer {
         t.start();
     }
     
+    public void downServer() {
+        isServerUp = false;
+    }
+    
     private void startServerSocketListner() {
         try {
             serverSocket = new ServerSocket(port);
-            while (true) {
+            while (isServerUp) {
                 Socket clientSocket = serverSocket.accept();
                 try {
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -53,6 +63,7 @@ public abstract class TicTacServer {
         } finally {
             try {
                 serverSocket.close();
+                System.out.println("closing server socket");
             } catch (IOException ex) {
                 Logger.getLogger(TicTacServer.class.getName()).log(Level.SEVERE, null, ex);
             }
