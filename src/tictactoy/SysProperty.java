@@ -14,7 +14,7 @@ public class SysProperty {
     public static String getProperty(String key) {
         FileInputStream fis = null;
         try {
-            fis = new FileInputStream("ttt.properties");
+            fis = new FileInputStream("/home/lahiru/programmingChallenge/TicTacToy/ttt.properties");
             Properties p = new Properties();
             p.load(fis);
             return p.getProperty(key);

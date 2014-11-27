@@ -5,19 +5,37 @@ package tictactoy;
  * @author lahiru
  */
 
-public class TicTacToy {
+public class TicTacToy extends TicTacServer{
     
     public final int player;
     public final int free;
     public final int opponent;
     int board[][];
     final TicTacGUI gui;
+    int gameHostServerPort;
+    int gameHostClientPort;
+    int gameClientServerPort;
+    int gameClientClientPort;
+    
+    private boolean clientConnected;
+    private String clientURL;
+    private boolean myTurn;
+    
+    TicTacClient client;
     
     public TicTacToy() {
         player = 1;
         free = 0;
         opponent = -1;
         board = new int[3][3];
+        gameHostServerPort = Integer.parseInt(SysProperty.getProperty("gameHostServerPort"));
+        gameHostClientPort = Integer.parseInt(SysProperty.getProperty("gameHostClientPort"));
+        gameClientServerPort = Integer.parseInt(SysProperty.getProperty("gameClientServerPort"));
+        gameClientClientPort = Integer.parseInt(SysProperty.getProperty("gameClientClientPort"));
+        
+        // gameplay
+        clientConnected = false;
+        myTurn = false;
         
         // create GUI
         gui = new TicTacGUI();
@@ -31,7 +49,11 @@ public class TicTacToy {
     }
     
     public void onUpdateFromGUI(int r, int c) {
-        
+        if(myTurn) {
+            tic(r, c, player);
+            client.sendMessage("tic " + r + " " + c);
+            myTurn = false;
+        }
     }
     
     private boolean isRowFree(int row, int player, int board[][]) {
@@ -155,6 +177,43 @@ public class TicTacToy {
         return 0;
     }
     
+    
+    @Override
+    public void onUpdate(String message) {
+        System.out.println(message);
+        if(message.startsWith("connecting")) {
+            clientURL = "localhost";
+            clientConnected = true;
+        }
+        else if(message.startsWith("tic")) {
+            String parts[] = message.split(" ");
+            int r = Integer.parseInt(parts[1]);
+            int c = Integer.parseInt(parts[2]);
+            tic(r, c, opponent);
+            myTurn = true;
+        }
+    }
+    
+    public void connectGame(String serverURL) {
+        myTurn = false;
+        setServerPort(gameClientServerPort);
+        startServer();
+        client = new TicTacClient(serverURL, gameHostServerPort);
+        client.sendMessage("connecting");
+    }
+    
+    public void hostGame() {
+        myTurn = true;
+        setServerPort(gameHostServerPort);
+        startServer();
+        while(!clientConnected) {
+            System.out.print(""); // make a small delay
+        }
+        System.out.println("-----------------");
+        client = new TicTacClient(clientURL, gameClientServerPort);
+        client.sendMessage("successfully connected");
+    }
+    
     public static void main(String[] args) {
         /*int player = 1;
         int opponent = -1;
@@ -171,8 +230,18 @@ public class TicTacToy {
         System.out.println(x.isGameOver());*/
         
         TicTacToy x = new TicTacToy();
+        if(args[0].equals("host")) {
+            x.hostGame();
+        }
+        else if(args[0].equals("client")) {
+            x.connectGame("localhost");
+        } else {
+            System.out.println("undefined operation");
+            System.exit(0);
+        }
         
         
     }
+
     
 }

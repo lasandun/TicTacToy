@@ -11,7 +11,7 @@ package tictactoy;
 public class Test extends TicTacServer{
 
     public Test(int port) {
-        super(port);
+        setServerPort(port);
     }
     
     @Override
