@@ -5,7 +5,7 @@ package tictactoy;
  * @author lahiru
  */
 
-public class TicTacToy extends TicTacServer{
+public class TicTacToy extends TicTacServer {
     
     public final int player;
     public final int free;
@@ -160,12 +160,12 @@ public class TicTacToy extends TicTacServer{
         board[r][c] = player;
         gui.setBoard(board);
         showBoard();
-        if(isGameOver() != 0) {
+        if(isAPlayerWon() != 0 || isGameDrawn() ) {
             finishGame();
         }
     }
     
-    int isGameOver() {
+    int isAPlayerWon() {
         int p;
         for(int r = 0; r < 3; ++r) {
             p = board[r][0];
@@ -182,12 +182,25 @@ public class TicTacToy extends TicTacServer{
         return 0;
     }
     
+    boolean isGameDrawn() {
+        for(int i = 0; i < 3; ++i) {
+            for(int j = 0; j < 3; ++j) {
+                if(board[i][j] == free) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     public void finishGame() {
-        if(isGameOver() == 1) {
+        if(isAPlayerWon() == 1) {
             gui.setMessageText("you won!");
         }
-        else if(isGameOver() == -1) {
+        else if(isAPlayerWon() == -1) {
             gui.setMessageText("you lost!");
+        } else if(isGameDrawn()) {
+            gui.setMessageText("Game drawn!");
         }
         myTurn = false;
         gameGoingOn = false;
