@@ -17,10 +17,33 @@ import javax.swing.JTextField;
  *
  * @author lahiru
  */
-public class TicTacGUI extends javax.swing.JFrame {
+public class TicTacGUI extends javax.swing.JFrame implements Runnable{
 
     JTextField[][] boxes = new JTextField[3][3];
     private TicTacToy ticTacToy;
+    private boolean  visibility;
+    
+        /** Creates new form TicTacGUI */
+    public TicTacGUI() {
+        visibility = false;
+        initGUIConfigs();
+        initComponents();
+        boxes[0][0] = box00;
+        boxes[0][1] = box01;
+        boxes[0][2] = box02;
+        boxes[1][0] = box10;
+        boxes[1][1] = box11;
+        boxes[1][2] = box12;
+        boxes[2][0] = box20;
+        boxes[2][1] = box21;
+        boxes[2][2] = box22;
+        setButtonActions();
+    }
+    
+    public void setVisibilityOfGUI(boolean visibility) {
+        this.visibility = visibility;
+        setVisible(visibility);
+    }
     
     public void setMessageText(String text) {
         textMessage.setText(text);
@@ -95,22 +118,6 @@ public class TicTacGUI extends javax.swing.JFrame {
                 buttonAction(2, 2);
             }
         });
-    }
-
-    /** Creates new form TicTacGUI */
-    public TicTacGUI() {
-        initGUIConfigs();
-        initComponents();
-        boxes[0][0] = box00;
-        boxes[0][1] = box01;
-        boxes[0][2] = box02;
-        boxes[1][0] = box10;
-        boxes[1][1] = box11;
-        boxes[1][2] = box12;
-        boxes[2][0] = box20;
-        boxes[2][1] = box21;
-        boxes[2][2] = box22;
-        setButtonActions();
     }
 
     /** This method is called from within the constructor to
@@ -343,38 +350,38 @@ private void box22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                new TicTacGUI().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(TicTacGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//
+//            public void run() {
+//                new TicTacGUI().setVisible(true);
+//            }
+//        });
+//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField box00;
     private javax.swing.JTextField box01;
@@ -387,4 +394,9 @@ private void box22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     private javax.swing.JTextField box22;
     private javax.swing.JTextField textMessage;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        setVisible(visibility);
+    }
 }

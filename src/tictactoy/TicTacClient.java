@@ -22,7 +22,7 @@ public class TicTacClient {
         this.port = port;
     }
 
-    public void sendMessage(String message) {
+    public boolean sendMessage(String message) {
         try {
             Socket client = new Socket(serverURL, port);
             PrintWriter out = new PrintWriter(client.getOutputStream());
@@ -30,7 +30,10 @@ public class TicTacClient {
             out.flush();
         } catch (IOException ex) {
             Logger.getLogger(TicTacClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("cannot connect to URL");
+            return false;
         }
+        return true;
     }
     
     public String readMessage() {

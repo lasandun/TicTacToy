@@ -51,7 +51,16 @@ public abstract class TicTacServer {
                 try {
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String message = input.readLine();
-                    onUpdate(message);
+                    if(message.startsWith("connecting:")) {
+                        String ipNport = clientSocket.getRemoteSocketAddress().toString().substring(1);
+                        int semicolonIndex = ipNport.indexOf(":");
+                        String ip = ipNport.substring(0, semicolonIndex);
+                        System.out.println("connected to ip :" + ip);
+                        onUpdate(message + ip);
+                    }
+                    else {
+                        onUpdate(message);
+                    }
                 } catch(Exception ex) {
                     Logger.getLogger(TicTacServer.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
