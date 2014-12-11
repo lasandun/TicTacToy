@@ -9,6 +9,7 @@ import java.util.LinkedList;
 public class GameTree {
     Node root;
     int maxLevels;  // equals to the level attribute of the leaves
+    boolean debug = false;
 
     public GameTree(Node root) {
         this.root = root;
@@ -16,13 +17,6 @@ public class GameTree {
     
     public GameTree(int board[][]) {
         int noOfFreeBoxes = Util.getNoOfFreeCells(board);
-//        for(int i = 0; i < 3; ++i) {
-//            for(int j = 0; j < 3; ++j) {
-//                if(board[i][j] == 0) {
-//                    noOfFreeBoxes++;
-//                }
-//            }
-//        }
         root = new Node(board, noOfFreeBoxes, 0);
         root.childs = new Node[noOfFreeBoxes];
     }
@@ -67,7 +61,7 @@ public class GameTree {
         // if a player has already won
         int winner = node.isAPlayerWon();
         if(winner != 0) {
-            node.evaluationValue = winner ;//* Constants.evaluationAtAVicoty;
+            node.evaluationValue = winner ;
             return;
         }
         
@@ -108,18 +102,6 @@ public class GameTree {
         }
     }
     
-    public void setEvaluationValuesOfTree() {
-        setEvaluationValuesAtLeaves();
-//        LinkedList<Node> nodeList = new LinkedList<Node>();
-//        for(int i = maxLevels - 1; i >= 0; --i) {
-//            nodeList = getNodesAtLevel(i);
-//            for(Node n : nodeList) {
-//                n.computeEvaluationValueFromChilds();
-//            }
-//            nodeList.clear();
-//        }
-    }
-    
     public int showBestSolutionBoard() {
         int bestIndex = 0;
         for(int i = 1; i < root.childs.length; ++i) {
@@ -127,10 +109,12 @@ public class GameTree {
                 bestIndex = i;
             }
         }
-        System.out.println();
-        System.out.println("******* BEST SOLUTION *************");
-        root.childs[bestIndex].showBoard();
-        System.out.println();
+        if(debug) {
+            System.out.println();
+            System.out.println("******* BEST SOLUTION *************");
+            root.childs[bestIndex].showBoard();
+            System.out.println();
+        }
         return bestIndex;
     }
     
@@ -141,17 +125,10 @@ public class GameTree {
                 Math.abs(node.evaluationValue) != Constants.unsetEvaluationVal) {
             return node.evaluationValue;
         }
-        
         if(isMaximizing) {
             int best = -1000;
             for(Node child : node.childs) {
                 int val = miniMax(child, false);
-                if(Math.abs(val) == Constants.unsetEvaluationVal) {
-                    System.out.println("errr : " + val);
-                    child.showBoard();
-                    System.out.println(child.childs[0].evaluationValue);
-                    System.exit(0);
-                }
                 best = Math.max(val, best);
             }
             node.evaluationValue = best;
@@ -168,23 +145,20 @@ public class GameTree {
         }
     }
     
-    
     public static int[] getBestMove(int board[][]) {
         if((Util.getNoOfFreeCells(board) == 8 && board[1][1] == 0) || 
                 Util.getNoOfFreeCells(board) == 9) {
             int ret[] = {1, 1};
             return ret;
         }
-        GameTree x = new GameTree(board);
+        GameTree gameTree = new GameTree(board);
         int maxLevels = Util.getNoOfFreeCells(board);
-        x.createChilds(maxLevels);
-        x.setEvaluationValuesAtLeaves();
-        x.miniMax(x.root, true);
+        gameTree.createChilds(maxLevels);
+        gameTree.setEvaluationValuesAtLeaves();
+        gameTree.miniMax(gameTree.root, true);
         
-        //x.showTree();
-
-        int bestIndex = x.showBestSolutionBoard();
-        int move[] = Util.extractLastMove(board, x.root.childs[bestIndex].board);
+        int bestIndex = gameTree.showBestSolutionBoard();
+        int move[] = Util.extractLastMove(board, gameTree.root.childs[bestIndex].board);
         return move;
     }
     
