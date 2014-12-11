@@ -121,13 +121,13 @@ public class GameTree {
     }
     
     public void showBestSolutionBoard() {
-        int bestEval = root.evaluationValue;
-        for(Node n : root.childs) {
-            if(n.evaluationValue == bestEval) {
-                n.showBoard();
-                System.out.println("");
+        int bestIndex = 0;
+        for(int i = 2; i < root.childs.length; ++i) {
+            if(root.childs[bestIndex].evaluationValue < root.childs[i].evaluationValue) {
+                bestIndex = i;
             }
         }
+        root.childs[bestIndex].showBoard();
     }
     
     public static void getBestMove(int board[][]) {

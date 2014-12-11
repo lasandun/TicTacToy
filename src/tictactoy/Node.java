@@ -95,7 +95,8 @@ public class Node {
     }
     
     public void computeEvaluationValueFromChilds() {
-        if(Math.abs(evaluationValue) == Constants.evaluationAtAVicoty) {
+        if(Math.abs(evaluationValue) > Constants.maxPossibleEval &&
+                Math.abs(evaluationValue) <= Constants.evaluationAtAVicoty) {
             return;
         }
         
@@ -107,10 +108,15 @@ public class Node {
             if(isMaxNode) eval = Math.max(eval, n.evaluationValue);
             else          eval = Math.min(eval, n.evaluationValue);
         }
+        
+        if(Math.abs(eval) > Constants.maxPossibleEval) {
+            if(eval > 0) eval--;
+            else        eval++;
+        }
         evaluationValue = eval;
         
         System.out.println();
-        System.out.println("chosen : " + eval);
+        System.out.println("chosen [" + isMaxNode + "] : " + eval);
         System.out.println("----------------");
         
         if(Math.abs(eval) == Constants.unsetEvaluationVal) {
