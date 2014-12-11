@@ -21,6 +21,10 @@ public class TicTacClient {
         this.serverURL = serverURL;
         this.port = port;
     }
+    
+    public String getIP() {
+        return serverURL;
+    }
 
     public boolean sendMessage(String message) {
         try {
@@ -50,7 +54,10 @@ public class TicTacClient {
     }
     
     public static void main(String[] args) {
-        TicTacClient x = new TicTacClient("localhost", 9090);
-        x.sendMessage("hi");
+        int port = Util.getPropertyInt("gameHostServerPort");
+        TicTacClient client = new TicTacClient("localhost", port);
+//        client.sendMessage("#connect_to_play");
+        client.sendMessage("#tic:2,1");
     }
+    
 }

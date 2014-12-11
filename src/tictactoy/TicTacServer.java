@@ -79,15 +79,4 @@ public abstract class TicTacServer {
         }
     }
     
-    public static void main(String[] args) {
-        TicTacServer x = new TicTacServer() {
-
-            @Override
-            public void onUpdate(String message) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        };
-        x.setServerPort(9090);
-        x.startServer();
-    }
 }

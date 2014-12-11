@@ -19,4 +19,9 @@ public class Point {
     public void show() {
         System.out.println("point: " + r +", " + c);
     }
+    
+    @Override
+    public String toString() {
+        return r + "," + c;
+    }
 }

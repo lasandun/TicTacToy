@@ -1,5 +1,7 @@
 package tictactoy;
 
+import java.util.StringTokenizer;
+
 /**
  *
  * @author lahiru
@@ -12,11 +14,10 @@ public class TicTacToy extends TicTacServer implements Runnable{
     public final int opponent;
     int board[][];
     
-    TicTacGUI gameGUI;
+    GameGUI gameGUI;
     MainGUI mainGUI;
-    Thread gameGuiThread;
     Thread mainGuiThread;
-    Thread t;
+    Thread gamePlayThread; // runs the GameGUI
     
     int gameHostServerPort;
     int gameHostClientPort;
@@ -31,14 +32,25 @@ public class TicTacToy extends TicTacServer implements Runnable{
     TicTacClient client;
     String clientIP;
     
-    String state;
+    int state;
+    final int hosting     = 0;
+    final int connected   = 1;
+    final int playing     = 2;
+    final int idle        = 3;
+    final int ticked       = 4;
+    
+    private Point lastMove;
     
     public TicTacToy() {
-        setState("idle");
+        board = new int[3][3];
+        
+        // states
+        setState(idle);
         player = 1;
         free = 0;
         opponent = -1;
-        board = new int[3][3];
+        
+        // connection properties
         gameHostServerPort = Integer.parseInt(SysProperty.getProperty("gameHostServerPort"));
         gameHostClientPort = Integer.parseInt(SysProperty.getProperty("gameHostClientPort"));
         gameClientServerPort = Integer.parseInt(SysProperty.getProperty("gameClientServerPort"));
@@ -49,28 +61,28 @@ public class TicTacToy extends TicTacServer implements Runnable{
         myTurn = false;
         gameGoingOn = false;
         
-        gameGUI = new TicTacGUI();
-        gameGuiThread = new Thread(gameGUI);
-        
-        mainGUI = new MainGUI(this);
-        mainGuiThread = new Thread(mainGUI);
-        t = new Thread(this);
+        // gui & threads
+//        /gameGUI = new GameGUI(this);
+//        gameGUI.show();
+//        mainGUI = new MainGUI(this);
+//        mainGuiThread = new Thread(mainGUI);
+//        gamePlayThread = new Thread(this);
+//        startGame();
     }
 
-    public void setState(String state) {
+    private synchronized void setState(int state) {
         this.state = state;
     }
     
-    public void startGame() {
+    private void startGame() {
         gameGUI.setVisibilityOfGUI(false);
         mainGUI.setVisibilityOfGUI(true);
         mainGuiThread.start();
-        gameGuiThread.start();
-        t.start();
+        gamePlayThread.start();
     }
     
     @Override
-    public void onUpdate(String message) {
+    public synchronized void onUpdate(String message) {
         System.out.println(message);
         if(message.startsWith("connecting:")) {
             clientURL = message.replaceFirst("connecting:", "");
@@ -81,18 +93,23 @@ public class TicTacToy extends TicTacServer implements Runnable{
             String parts[] = message.split(" ");
             int r = Integer.parseInt(parts[1]);
             int c = Integer.parseInt(parts[2]);
-            tic(r, c, opponent);
-            myTurn = true;
+            lastMove = new Point(r, c);
+            setState(ticked);
+            //tic(r, c, opponent);
+            //myTurn = true;
             return;
         }
         else if(message.equals("host")) {
-            setState("host");            
+            setState(hosting);            
             return;
         }
-        else if(message.startsWith("connect:")) {
-            setState("connect");
-            clientIP = message.replaceFirst("connect:", "");
+        else if(message.startsWith("MainGUI-connect:")) {
+            setState(connected);
+            clientIP = message.replaceFirst("MainGUI-connect:", "");
             return;
+        }
+        else if(message.equals("GameGUI-stopGame")) {
+            
         }
     }
     
@@ -194,11 +211,14 @@ public class TicTacToy extends TicTacServer implements Runnable{
                     bestMove = new Point(r, c);
                 }
             }
-        }        
+        }
         return bestMove;
     }
     
     public void tic(int r, int c, int player) {
+        if(r > 3 || c > 3 || r < 0 || c < 0) {
+            System.out.println("Invalid cell : " + r + "," + c);
+        }
         if(board[r][c] != free) {
             System.out.println("Error: box already allocated");
             System.exit(1);
@@ -259,7 +279,7 @@ public class TicTacToy extends TicTacServer implements Runnable{
         if(successful) {
             mainGUI.setVisibilityOfGUI(false);
             gameGUI.setVisibilityOfGUI(true);
-            setState("playing");
+            setState(playing);
             myTurn = false;
             setServerPort(gameClientServerPort);
             startServer();
@@ -267,7 +287,7 @@ public class TicTacToy extends TicTacServer implements Runnable{
             gameGUI.setVisibilityOfGUI(true);
         }
         else {
-            setState("idle");
+            setState(idle);
         }
     }
     
@@ -276,7 +296,7 @@ public class TicTacToy extends TicTacServer implements Runnable{
         gameGoingOn = true;
         setServerPort(gameHostServerPort);
         startServer();
-        setState("playing");
+        setState(playing);
         mainGUI.setMessage("waiting for a client to connect....");
         while(!clientConnected) {
             System.out.print(""); // make a small delay - use wait() instead
@@ -294,15 +314,23 @@ public class TicTacToy extends TicTacServer implements Runnable{
     @Override
     public void run() {
         while(true) {
-            if(state.equals("host")) {                
+            if(state == hosting) {                
                 System.out.println("*************");
                 hostGame();
                 continue;
             }
-            else if(state.equals("connect")) {                
+            else if(state == connected) {                
                 System.out.println("-------------");
                 connectGame(clientIP);
                 continue;
+            }
+            else if(state == playing) {
+                
+            }
+            else if(state == ticked) {
+                tic(lastMove.r, lastMove.c, opponent);
+                myTurn = true;
+                setState(playing);
             }
             else {
                 System.out.print("");
@@ -310,41 +338,29 @@ public class TicTacToy extends TicTacServer implements Runnable{
         }
     }
     
+    public String getBoardAsString() {
+        String brd = "";
+        for(int i = 0; i < 3; ++i) {
+            for(int j = 0; j < 3; ++j) {
+                brd += board[i][j] + " ";
+            }
+        }
+        return brd;
+    }
+    
+    public void setBoard(String brd) {
+        StringTokenizer st = new StringTokenizer(brd, " ");
+        for(int i = 0; i < 3; ++i) {
+            for(int j = 0; j < 3; ++j) {
+                board[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+    }
+    
     public static void main(String[] args) {
-        /*int player = 1;
-        int opponent = -1;
-        int free = 0;
-        TicTacToy x = new TicTacToy();
-        x.tic(0, 1, player);
-        x.tic(1, 0, opponent);
-        x.tic(2, 1, player);
-        x.tic(0, 2, opponent);
-        x.tic(1, 1, opponent);
-        //x.tic(1, 2, opponent);
-        x.showBoard();
-        x.bestMove(opponent, x.board).show();
-        System.out.println(x.isGameOver());*/
-        
-//        TicTacToy x = new TicTacToy();
-//        if(args[0].equals("host")) {
-//            x.hostGame();
-//        }
-//        else if(args[0].equals("client")) {
-//            x.connectGame("localhost");
-//        }
-//        else {
-//            System.out.println("undefined operation");
-//            System.exit(0);
-//        }
-        
         
         TicTacToy game = new TicTacToy();
-        game.startGame();
-        
         
     }
 
-    
-
-    
 }
