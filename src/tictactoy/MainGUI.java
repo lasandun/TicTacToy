@@ -1,13 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * MainGUI.java
- *
- * Created on Dec 5, 2014, 10:43:00 AM
- */
 package tictactoy;
 
 /**
@@ -15,13 +5,11 @@ package tictactoy;
  * @author lahiru
  */
 public class MainGUI extends javax.swing.JFrame implements Runnable{
-    private TicTacToy ticTacToy;
     private boolean visibility;
     /** Creates new form MainGUI */
-    public MainGUI(TicTacToy ticTacToy) {
+    public MainGUI() {
         visibility = false;
         initComponents();
-        this.ticTacToy = ticTacToy;
     }
     
     public void setVisibilityOfGUI(boolean visibility) {
@@ -156,11 +144,11 @@ public class MainGUI extends javax.swing.JFrame implements Runnable{
     }// </editor-fold>//GEN-END:initComponents
 
 private void createServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createServerButtonActionPerformed
-    ticTacToy.onUpdate("host");
+    
 }//GEN-LAST:event_createServerButtonActionPerformed
 
 private void connectServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectServerButtonActionPerformed
-    ticTacToy.onUpdate("MainGUI-connect:" + ipText.getText());
+    
 }//GEN-LAST:event_connectServerButtonActionPerformed
 
 private void messageTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageTextActionPerformed
