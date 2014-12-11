@@ -15,14 +15,14 @@ public class GameTree {
     }
     
     public GameTree(int board[][]) {
-        int noOfFreeBoxes = 0;
-        for(int i = 0; i < 3; ++i) {
-            for(int j = 0; j < 3; ++j) {
-                if(board[i][j] == 0) {
-                    noOfFreeBoxes++;
-                }
-            }
-        }
+        int noOfFreeBoxes = Util.getNoOfFreeCells(board);
+//        for(int i = 0; i < 3; ++i) {
+//            for(int j = 0; j < 3; ++j) {
+//                if(board[i][j] == 0) {
+//                    noOfFreeBoxes++;
+//                }
+//            }
+//        }
         root = new Node(board, noOfFreeBoxes, 0);
         root.childs = new Node[noOfFreeBoxes];
     }
@@ -63,6 +63,13 @@ public class GameTree {
     
     private void createChildsInternal(int level, Node node) {
         if(level >= maxLevels) return;
+        
+        // if a player has already won
+        int winner = node.isAPlayerWon();
+        if(winner != 0){
+            node.evaluationValue = winner * Constants.evaluationAtAVicoty;
+            return;
+        }
         
         createChildsInNode(node);
         for(Node n : node.childs) {
@@ -113,7 +120,7 @@ public class GameTree {
         }
     }
     
-    public void getBestSolutionBoard() {
+    public void showBestSolutionBoard() {
         int bestEval = root.evaluationValue;
         for(Node n : root.childs) {
             if(n.evaluationValue == bestEval) {
@@ -123,16 +130,17 @@ public class GameTree {
         }
     }
     
-    public static void main(String[] args) {
-        int board[][] = {{0,0,0},{0,-1,0},{0,0,0}};
+    public static void getBestMove(int board[][]) {
         GameTree x = new GameTree(board);
-        int levels = 4;
+        int levels = Util.getNoOfFreeCells(board);
         x.createChilds(levels);
         x.setEvaluationValuesOfTree();
-        x.getBestSolutionBoard();
-        
-        //x.showTree();
-        
+        x.showBestSolutionBoard();
+    }
+    
+    public static void main(String[] args) {
+        int board[][] = {{1,0,1},{-1,-1,0},{-1,0,0}};
+        getBestMove(board);
     }
     
 }

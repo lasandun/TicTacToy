@@ -18,7 +18,7 @@ public class Node {
         this.childs = new Node[noOfFreeBoxes];
         this.level = level;
         this.noOfFreeBoxes = noOfFreeBoxes;
-        evaluationValue = 99;
+        evaluationValue = Constants.unsetEvaluationVal;
     }
     
     public boolean isMaxNode() {
@@ -95,8 +95,12 @@ public class Node {
     }
     
     public void computeEvaluationValueFromChilds() {
+        if(Math.abs(evaluationValue) == Constants.evaluationAtAVicoty) {
+            return;
+        }
+        
         boolean isMaxNode = isMaxNode();
-        int eval = isMaxNode ? -99: 99;
+        int eval = isMaxNode ? -Constants.unsetEvaluationVal: Constants.unsetEvaluationVal;
         System.out.println("-------" + level + "--------");
         for(Node n: childs) {
             System.out.print(n.evaluationValue + " ");
@@ -109,11 +113,28 @@ public class Node {
         System.out.println("chosen : " + eval);
         System.out.println("----------------");
         
-        if(Math.abs(eval) > 10) {
+        if(Math.abs(eval) == Constants.unsetEvaluationVal) {
             System.out.println("Error evaluation value : " + eval);
-            System.exit(-99);
+            System.exit(-1);
         }
         
+    }
+    
+    int isAPlayerWon() {
+        int p;
+        for(int r = 0; r < 3; ++r) {
+            p = board[r][0];
+            if(board[r][1] == p && board[r][2] == p) return p;
+        }
+        for(int c = 0; c < 3; ++c) {
+            p = board[0][c];
+            if(board[1][c] == p && board[2][c] == p) return p;
+        }
+        p = board[1][1];
+        if(board[0][0] == p && board[2][2] == p) return p;
+        if(board[2][0] == p && board[0][2] == p) return p;
+        
+        return 0;
     }
     
     public void showChilds() {
