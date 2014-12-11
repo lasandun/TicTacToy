@@ -55,4 +55,16 @@ public class Util {
         return noOfFreeBoxes;
     }
     
+    public static int[] extractLastMove(int previous[][], int current[][]) {
+        for(int r = 0; r < 3; ++r) {
+            for(int c = 0; c < 3; ++c) {
+                if(previous[r][c] != current[r][c]) {
+                   int lastMove[] = {r, c};
+                   return lastMove;
+                }
+            }
+        }
+        return null;
+    }
+    
 }

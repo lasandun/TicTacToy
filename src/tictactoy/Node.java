@@ -102,22 +102,22 @@ public class Node {
         
         boolean isMaxNode = isMaxNode();
         int eval = isMaxNode ? -Constants.unsetEvaluationVal: Constants.unsetEvaluationVal;
-        System.out.println("-------" + level + "--------");
+        //System.out.println("-------" + level + "--------");
         for(Node n: childs) {
-            System.out.print(n.evaluationValue + " ");
+            //System.out.print(n.evaluationValue + " ");
             if(isMaxNode) eval = Math.max(eval, n.evaluationValue);
             else          eval = Math.min(eval, n.evaluationValue);
         }
         
-        if(Math.abs(eval) > Constants.maxPossibleEval) {
-            if(eval > 0) eval--;
-            else        eval++;
-        }
+//        if(Math.abs(eval) > Constants.maxPossibleEval) {
+//            if(eval > 0) eval--;
+//            else        eval++;
+//        }
         evaluationValue = eval;
         
-        System.out.println();
-        System.out.println("chosen [" + isMaxNode + "] : " + eval);
-        System.out.println("----------------");
+//        System.out.println();
+//        System.out.println("chosen [" + isMaxNode + "] : " + eval);
+//        System.out.println("----------------");
         
         if(Math.abs(eval) == Constants.unsetEvaluationVal) {
             System.out.println("Error evaluation value : " + eval);

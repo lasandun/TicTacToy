@@ -120,27 +120,33 @@ public class GameTree {
         }
     }
     
-    public void showBestSolutionBoard() {
+    public int showBestSolutionBoard() {
         int bestIndex = 0;
         for(int i = 2; i < root.childs.length; ++i) {
             if(root.childs[bestIndex].evaluationValue < root.childs[i].evaluationValue) {
                 bestIndex = i;
             }
         }
+        System.out.println();
+        System.out.println("******* BEST SOLUTION *************");
         root.childs[bestIndex].showBoard();
+        System.out.println();
+        return bestIndex;
     }
     
-    public static void getBestMove(int board[][]) {
-        GameTree x = new GameTree(board);
-        int levels = Util.getNoOfFreeCells(board);
-        x.createChilds(levels);
-        x.setEvaluationValuesOfTree();
-        x.showBestSolutionBoard();
+    public static int[] getBestMove(int board[][]) {
+        GameTree gameTree = new GameTree(board);
+        int maxLevels = Util.getNoOfFreeCells(board);
+        gameTree.createChilds(maxLevels);
+        gameTree.setEvaluationValuesOfTree();
+        int bestIndex = gameTree.showBestSolutionBoard();
+        return Util.extractLastMove(board, gameTree.root.childs[bestIndex].board);
     }
     
     public static void main(String[] args) {
         int board[][] = {{1,0,1},{-1,-1,0},{-1,0,0}};
-        getBestMove(board);
+        int move[] = getBestMove(board);
+        System.out.println("last Move = " + move[0] + ", " + move[1]);
     }
     
 }
