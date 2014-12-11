@@ -67,4 +67,21 @@ public class Util {
         return null;
     }
     
+    public static int isAPlayerWon(int board[][]) {
+        int p;
+        for(int r = 0; r < 3; ++r) {
+            p = board[r][0];
+            if(board[r][1] == p && board[r][2] == p) return p;
+        }
+        for(int c = 0; c < 3; ++c) {
+            p = board[0][c];
+            if(board[1][c] == p && board[2][c] == p) return p;
+        }
+        p = board[1][1];
+        if(board[0][0] == p && board[2][2] == p) return p;
+        if(board[2][0] == p && board[0][2] == p) return p;
+        
+        return 0;
+    }
+    
 }

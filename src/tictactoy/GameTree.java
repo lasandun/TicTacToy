@@ -66,8 +66,8 @@ public class GameTree {
         
         // if a player has already won
         int winner = node.isAPlayerWon();
-        if(winner != 0){
-            node.evaluationValue = winner * Constants.evaluationAtAVicoty;
+        if(winner != 0) {
+            node.evaluationValue = winner ;//* Constants.evaluationAtAVicoty;
             return;
         }
         
@@ -110,19 +110,19 @@ public class GameTree {
     
     public void setEvaluationValuesOfTree() {
         setEvaluationValuesAtLeaves();
-        LinkedList<Node> nodeList = new LinkedList<Node>();
-        for(int i = maxLevels - 1; i >= 0; --i) {
-            nodeList = getNodesAtLevel(i);
-            for(Node n : nodeList) {
-                n.computeEvaluationValueFromChilds();
-            }
-            nodeList.clear();
-        }
+//        LinkedList<Node> nodeList = new LinkedList<Node>();
+//        for(int i = maxLevels - 1; i >= 0; --i) {
+//            nodeList = getNodesAtLevel(i);
+//            for(Node n : nodeList) {
+//                n.computeEvaluationValueFromChilds();
+//            }
+//            nodeList.clear();
+//        }
     }
     
     public int showBestSolutionBoard() {
         int bestIndex = 0;
-        for(int i = 2; i < root.childs.length; ++i) {
+        for(int i = 1; i < root.childs.length; ++i) {
             if(root.childs[bestIndex].evaluationValue < root.childs[i].evaluationValue) {
                 bestIndex = i;
             }
@@ -134,19 +134,62 @@ public class GameTree {
         return bestIndex;
     }
     
+    int count = 0;
+    public int miniMax(Node node, boolean isMaximizing) {
+        ++count;
+        if(node.level == maxLevels || node.childs == null || node.childs[0] ==null ||
+                Math.abs(node.evaluationValue) != Constants.unsetEvaluationVal) {
+            return node.evaluationValue;
+        }
+        
+        if(isMaximizing) {
+            int best = -1000;
+            for(Node child : node.childs) {
+                int val = miniMax(child, false);
+                if(Math.abs(val) == Constants.unsetEvaluationVal) {
+                    System.out.println("errr : " + val);
+                    child.showBoard();
+                    System.out.println(child.childs[0].evaluationValue);
+                    System.exit(0);
+                }
+                best = Math.max(val, best);
+            }
+            node.evaluationValue = best;
+            return best;
+        }
+        else {
+            int best = 1000;
+            for(Node child : node.childs) {
+                int val = miniMax(child, true);
+                best = Math.min(val, best);
+            }
+            node.evaluationValue = best;
+            return best;
+        }
+    }
+    
+    
     public static int[] getBestMove(int board[][]) {
-        GameTree gameTree = new GameTree(board);
+        if((Util.getNoOfFreeCells(board) == 8 && board[1][1] == 0) || 
+                Util.getNoOfFreeCells(board) == 9) {
+            int ret[] = {1, 1};
+            return ret;
+        }
+        GameTree x = new GameTree(board);
         int maxLevels = Util.getNoOfFreeCells(board);
-        gameTree.createChilds(maxLevels);
-        gameTree.setEvaluationValuesOfTree();
-        int bestIndex = gameTree.showBestSolutionBoard();
-        return Util.extractLastMove(board, gameTree.root.childs[bestIndex].board);
+        x.createChilds(maxLevels);
+        x.setEvaluationValuesAtLeaves();
+        x.miniMax(x.root, true);
+        
+        //x.showTree();
+
+        int bestIndex = x.showBestSolutionBoard();
+        int move[] = Util.extractLastMove(board, x.root.childs[bestIndex].board);
+        return move;
     }
     
     public static void main(String[] args) {
-        int board[][] = {{1,0,1},{-1,-1,0},{-1,0,0}};
-        int move[] = getBestMove(board);
-        System.out.println("last Move = " + move[0] + ", " + move[1]);
+        int board[][] = {{0,0,0}, {0,0,0}, {0,0,0}};
+        getBestMove(board);
     }
-    
 }

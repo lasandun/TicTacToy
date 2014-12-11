@@ -78,9 +78,10 @@ public class Node {
     }
 
     public void setEvaluationValueAsALeave() {
-        int player = 1;
-        int opponent = -1;
-        evaluationValue = winningPossibilities(player, board) - winningPossibilities(opponent, board);
+//        int player = 1;
+//        int opponent = -1;
+//        evaluationValue = winningPossibilities(player, board) - winningPossibilities(opponent, board);
+        evaluationValue = isAPlayerWon();
     }
     
     public void showBoard() {
