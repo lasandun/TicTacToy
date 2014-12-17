@@ -7,12 +7,48 @@ package tictactoy;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author lahiru
  */
 public class Util {
+    
+    //data - id player movex movey
+    public static String sendPost(String key, String value) {
+        String reply = "";
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost("http://localhost:8000/test");
+        try {
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+            nameValuePairs.add(new BasicNameValuePair(key, value));
+            
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            HttpResponse response = client.execute(post);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                reply += line;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Server sent reply to (" + key + ", " + value + ") : " + reply);
+        return reply;
+    }
     
     public static int[][] copyBoard(int board[][]) {
         int boardNew[][] = new int[3][3];
