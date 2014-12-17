@@ -7,16 +7,15 @@ import javax.swing.JTextField;
  *
  * @author lahiru
  */
-public class GameGUI extends javax.swing.JFrame implements Runnable{
+public class GameGUI extends javax.swing.JFrame {
 
     JTextField[][] boxes = new JTextField[3][3];
-    private boolean  visibility;
-    boolean isPossibleToMove;
+    boolean isPossibleToMoveSP;
+    boolean player1Chance;
     int board[][];
     String mode;
     
     public GameGUI() {
-        visibility = false;
         initGUIConfigs();
         initComponents();
         boxes[0][0] = box00;
@@ -31,16 +30,11 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
         setButtonActions();
         
         board = new int[3][3];
-        isPossibleToMove = false;
+        isPossibleToMoveSP = false;
+        player1Chance = true;
         mode = "idle";
-        //resetGame();
     }
-    
-    public void setVisibilityOfGUI(boolean visibility) {
-        this.visibility = visibility;
-        setVisible(visibility);
-    }
-    
+
     public void setMessageText(String text) {
         textMessage.setText(text);
     }
@@ -56,15 +50,16 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
         if(singlePlayer.isSelected()) {
             mode = "singlePlayer";
             if(!chkBoxStarting.isSelected()) {
-                isPossibleToMove = false;
+                isPossibleToMoveSP = false;
                 board[1][1] = 1;
                 setBoard();
             }
-            isPossibleToMove = true;
+            isPossibleToMoveSP = true;
         } else if(internet.isSelected()) {
             mode = "internet";
         } else {
             mode = "withFriend";
+            player1Chance = true;
         }
     }
     
@@ -82,7 +77,7 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
         }
     }
     
-    public void finishGame() {
+    public void finishGameSP() {
         int p = Util.isAPlayerWon(board);
         if(p > 0) {
             setMessageText("You lost");
@@ -96,14 +91,14 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
     }
     
     public void singlePlayer(int r, int c) {
-        if(isPossibleToMove && board[r][c] == 0) {
-            isPossibleToMove = false;
+        if(isPossibleToMoveSP && board[r][c] == 0) {
+            isPossibleToMoveSP = false;
             board[r][c] = -1;
             setBoard();
             
             if(Util.isAPlayerWon(board) != 0  || Util.getNoOfFreeCells(board) == 0) {
-                isPossibleToMove = false;
-                finishGame();
+                isPossibleToMoveSP = false;
+                finishGameSP();
                 return;
             }
             int bestMove[] = GameTree.getBestMove(board);
@@ -111,17 +106,39 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
             int bestCol = bestMove[1];
             board[bestRow][bestCol] = 1;
             setBoard();
-            isPossibleToMove = true;
+            isPossibleToMoveSP = true;
             if(Util.isAPlayerWon(board) != 0  || Util.getNoOfFreeCells(board) == 0) {
-                isPossibleToMove = false;
-                finishGame();
+                isPossibleToMoveSP = false;
+                finishGameSP();
                 return;
             }
         }
     }
     
     public void withFriend(int r, int c) {
+        if(board[r][c] != 0) return;
         
+        if(Util.isAPlayerWon(board) != 0  || Util.getNoOfFreeCells(board) == 0) {
+            return;
+        }
+        
+        int currPlayer = player1Chance ? 1 : -1;
+        player1Chance = !player1Chance;
+        board[r][c] = currPlayer;
+        setBoard();
+        if(Util.isAPlayerWon(board) != 0  || Util.getNoOfFreeCells(board) == 0) {
+            int p = Util.isAPlayerWon(board);
+            if(p > 0) {
+                setMessageText("Player 1 won");
+            }
+            else if(p == 0) {
+                setMessageText("Game drawn");
+            }
+            else {
+                setMessageText("Player 2 won");
+            }
+            return;
+        }
     }
     
     public void buttonAction(int r, int c) {
@@ -131,7 +148,7 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
         else if(mode.equals("internet")) {
             
         }
-        else {
+        else if(mode.equals("withFriend")) {
             withFriend(r, c);
         }
     }
@@ -211,6 +228,7 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
         singlePlayer = new javax.swing.JRadioButton();
         withFriend = new javax.swing.JRadioButton();
         internet = new javax.swing.JRadioButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -348,6 +366,8 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
             }
         });
 
+        jLabel2.setText("(Offline)");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -388,17 +408,22 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(singlePlayer)
+                                .addComponent(withFriend)
+                                .addComponent(internet))
+                            .addGap(76, 76, 76))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                            .addComponent(chkBoxStarting)
+                            .addGap(25, 25, 25)))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(singlePlayer)
-                            .addComponent(withFriend)
-                            .addComponent(internet))
-                        .addGap(76, 76, 76))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                        .addComponent(chkBoxStarting)
-                        .addGap(25, 25, 25))))
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -434,7 +459,9 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
                         .addGap(78, 78, 78)
                         .addComponent(singlePlayer)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(chkBoxStarting)))
+                        .addComponent(chkBoxStarting)
+                        .addGap(58, 58, 58)
+                        .addComponent(jLabel2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -567,13 +594,10 @@ private void internetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JCheckBox chkBoxStarting;
     private javax.swing.JRadioButton internet;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JRadioButton singlePlayer;
     private javax.swing.JTextField textMessage;
     private javax.swing.JRadioButton withFriend;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void run() {
-        setVisible(visibility);
-    }
 }
