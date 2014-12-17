@@ -82,7 +82,7 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
         }
     }
     
-    public void buttonAction(int r, int c) {        
+    public void buttonAction(int r, int c) {
         if(isPossibleToMove) {
             isPossibleToMove = false;
             board[r][c] = -1;
