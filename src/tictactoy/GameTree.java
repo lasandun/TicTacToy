@@ -162,11 +162,11 @@ public class GameTree {
     }
     
     public static int[] getBestMove(int board[][]) {
-//        if((Util.getNoOfFreeCells(board) == 8 && board[1][1] == 0) || 
-//                Util.getNoOfFreeCells(board) == 9) {
-//            int ret[] = {1, 1};
-//            return ret;
-//        }
+        if((Util.getNoOfFreeCells(board) == 8 && board[1][1] == 0) || 
+                Util.getNoOfFreeCells(board) == 9) {
+            int ret[] = {1, 1};
+            return ret;
+        }
         GameTree gameTree = new GameTree(board);
         int maxLevels = Util.getNoOfFreeCells(board);
         gameTree.createChilds(maxLevels);

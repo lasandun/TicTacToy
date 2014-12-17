@@ -29,7 +29,8 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
         boxes[2][2] = box22;
         setButtonActions();
         board = new int[3][3];
-        isPossibleToMove = true;
+        //isPossibleToMove = true;
+        resetGame();
     }
     
     public void setVisibilityOfGUI(boolean visibility) {
@@ -83,7 +84,7 @@ public class GameGUI extends javax.swing.JFrame implements Runnable{
     }
     
     public void buttonAction(int r, int c) {
-        if(isPossibleToMove) {
+        if(isPossibleToMove && board[r][c] == 0) {
             isPossibleToMove = false;
             board[r][c] = -1;
             setBoard();
