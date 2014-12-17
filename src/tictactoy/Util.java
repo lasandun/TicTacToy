@@ -25,15 +25,15 @@ import java.util.List;
  */
 public class Util {
     
-    //data - id player movex movey
-    public static String sendPost(String key, String value) {
+    public static final String connectURL = "http://ttt-hirantha.rhcloud.com/onlinePlayerConnect";
+    public static final String moveURL = "http://ttt-hirantha.rhcloud.com/onlinePlayerMove";
+    
+    
+    public static String sendPost(String url, List<NameValuePair> nameValuePairs) {
         String reply = "";
         HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://localhost:8000/test");
+        HttpPost post = new HttpPost(url);
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-            nameValuePairs.add(new BasicNameValuePair(key, value));
-            
             post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             HttpResponse response = client.execute(post);
@@ -46,8 +46,21 @@ public class Util {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Server sent reply to (" + key + ", " + value + ") : " + reply);
+        System.out.println("Server sent reply: " + reply);
         return reply;
+    }
+    
+    public static String sendOnlineMove(int r, int c, int player, int gameID) {
+        String value = gameID + " " + player + " " + r + " " + c;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+        nameValuePairs.add(new BasicNameValuePair("move", value));
+        String rep = sendPost(moveURL, nameValuePairs);
+        System.out.println(rep);
+        return rep;
+    }
+    
+    public static void main(String[] args) {
+        //sendPost("", "");
     }
     
     public static int[][] copyBoard(int board[][]) {

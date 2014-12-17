@@ -1,7 +1,9 @@
 package tictactoy;
 
 import java.awt.event.MouseAdapter;
+import java.util.ArrayList;
 import javax.swing.JTextField;
+import org.apache.http.NameValuePair;
 
 /**
  *
@@ -14,6 +16,9 @@ public class GameGUI extends javax.swing.JFrame {
     boolean player1Chance;
     int board[][];
     String mode;
+    int gameIDOP;
+    int playerOP;
+    int turnOP;
     
     public GameGUI() {
         initGUIConfigs();
@@ -57,6 +62,15 @@ public class GameGUI extends javax.swing.JFrame {
             isPossibleToMoveSP = true;
         } else if(internet.isSelected()) {
             mode = "internet";
+            isPossibleToMoveSP = false;
+            String reply = Util.sendPost(Util.connectURL, new ArrayList<NameValuePair>());
+            reply = reply.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(",", " ").replaceAll("\"", "");
+            System.out.println(reply);
+            String parts[] = reply.split(" ");
+            gameIDOP = Integer.parseInt(parts[0]);
+            playerOP = Integer.parseInt(parts[1]);
+            turnOP = Integer.parseInt(parts[2]);
+            
         } else {
             mode = "withFriend";
             player1Chance = true;
@@ -141,12 +155,51 @@ public class GameGUI extends javax.swing.JFrame {
         }
     }
     
+    public void onlinePlay(int r, int c) {
+        if(Util.isAPlayerWon(board) != 0) {
+            turnOP = 0;
+            if(Util.isAPlayerWon(board) == playerOP) {
+                setMessageText("You won");
+            } else {
+                setMessageText("You lost");
+            }
+        } else if(Util.getNoOfFreeCells(board) == 0) {
+            turnOP = 0;
+            setMessageText("Game drawn");
+        }
+        
+        String reply = Util.sendOnlineMove(r, c, playerOP, gameIDOP);
+        reply = reply.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(",", " ").replaceAll("\"", "");
+        String parts[] = reply.split(" ");
+//        int isAPlayerWon = Integer.parseInt(parts[0]);
+//        int noOfFreeCells = Integer.parseInt(parts[1]);
+        turnOP = Integer.parseInt(parts[2]);
+        
+        for(int i = 0; i < 3; ++i) {
+            for(int j = 0; j < 3; ++j) {
+                board[i][j] = Integer.parseInt(parts[3 + 3 * i + j]);
+            }
+        }
+        setBoard();
+        if(Util.isAPlayerWon(board) != 0) {
+            turnOP = 0;
+            if(Util.isAPlayerWon(board) == playerOP) {
+                setMessageText("You won");
+            } else {
+                setMessageText("You lost");
+            }
+        } else if(Util.getNoOfFreeCells(board) == 0) {
+            turnOP = 0;
+            setMessageText("Game drawn");
+        }
+    }
+    
     public void buttonAction(int r, int c) {
         if(mode.equals("singlePlayer")) {
             singlePlayer(r, c);
         }
         else if(mode.equals("internet")) {
-            
+            onlinePlay(r, c);
         }
         else if(mode.equals("withFriend")) {
             withFriend(r, c);
