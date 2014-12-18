@@ -72,10 +72,15 @@ public class GameGUI extends javax.swing.JFrame {
             gameIDOP = Integer.parseInt(parts[0]);
             playerOP = Integer.parseInt(parts[1]);
             turnOP = Integer.parseInt(parts[2]);
+            if(turnOP == 0) {
+                setMessageText("Waiting for another player...");
+            }
+            
             setTimer(2);            
         } else {
             mode = "withFriend";
             player1Chance = true;
+            setMessageText("Play 'X'");
         }
     }
     
@@ -140,6 +145,8 @@ public class GameGUI extends javax.swing.JFrame {
         
         int currPlayer = player1Chance ? 1 : -1;
         player1Chance = !player1Chance;
+        if(player1Chance) setMessageText("Play 'X'");
+        else              setMessageText("Play 'O'");
         board[r][c] = currPlayer;
         setBoard();
         if(Util.isAPlayerWon(board) != 0  || Util.getNoOfFreeCells(board) == 0) {
@@ -161,6 +168,9 @@ public class GameGUI extends javax.swing.JFrame {
         checkStatusOfGameOP();
         //dummy call
         makeMove(-1, -1);
+        if(turnOP != playerOP) {
+            return;
+        }
         
         makeMove(r, c);
         checkStatusOfGameOP();
@@ -445,9 +455,6 @@ public class GameGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                         .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(49, 49, 49))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(box20, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -471,7 +478,10 @@ public class GameGUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(162, 162, 162)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()

@@ -34,6 +34,13 @@ public class PollingTimer extends TimerTask {
         gui.makeMove(-1, -1);
         gui.checkStatusOfGameOP();
         System.out.println("Time's up!");
+        if(gui.turnOP == 0 && Util.getNoOfFreeCells(gui.board) == 9) {
+            gui.setMessageText("Waiting for another player...");
+        } else if(gui.turnOP == gui.playerOP) {
+            gui.setMessageText("It's your turn");
+        } else if(gui.turnOP == (-gui.playerOP)) {
+            gui.setMessageText("It's your opponent's turn");
+        }
     }
     
     public static void main(String args[]) {
